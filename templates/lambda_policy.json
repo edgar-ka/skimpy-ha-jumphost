@@ -1,0 +1,37 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "NotifyASG",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:CompleteLifecycleAction"
+            ],
+            "Resource": "${asg_arn}"
+        },
+        {
+            "Sid": "ListRoute53Zones",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ListHostedZones",
+                "route53:ListHostedZonesByName"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ChangeRecordSet",
+            "Effect": "Allow",
+            "Action": [
+                "route53:GetHostedZone",
+                "route53:ChangeResourceRecordSets"
+            ],
+            "Resource": "arn:aws:route53:::hostedzone/${hosted_zone_id}"
+        },
+        {
+            "Sid": "FindInstance",
+            "Effect": "Allow",
+            "Action": "ec2:DescribeInstances",
+            "Resource": "*"
+        }
+    ]
+  }
