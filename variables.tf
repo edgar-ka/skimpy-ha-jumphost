@@ -17,12 +17,12 @@ variable "ami_search" {
   type = map(object({ ami_owner = string, ami_filter = string }))
   default = {
     "t2.micro" = {
-      ami_owner  = "amazon"
-      ami_filter = "amzn-ami-hvm*"
+      ami_owner  = "099720109477"
+      ami_filter = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server*"
     }
     "t3.micro" = {
-      ami_owner  = "amazon"
-      ami_filter = "amzn-ami-hvm*"
+      ami_owner  = "099720109477"
+      ami_filter = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server*"
     }
     "t4g.nano" = {
       ami_owner  = "679593333241"
