@@ -85,7 +85,7 @@ def lambda_handler(event, context):
             get_instance_ip(event["detail"]["EC2InstanceId"])
         )
     else:
-        # TODO: implement logging to stdout
+        # TODO: implement at least logging to stdout
         pass
     asclient.complete_lifecycle_action(
         AutoScalingGroupName=event["detail"]["AutoScalingGroupName"],

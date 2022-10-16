@@ -3,11 +3,18 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
+data "local_file" "lambda_source" {
+  filename = "${path.module}/lambda/manage_dns_record.py"
+}
+
 data "archive_file" "lambda_function" {
   type             = "zip"
-  source_file      = "${path.module}/lambda/manage_dns_record.py"
   output_file_mode = "0660"
   output_path      = "${path.module}/files/manage_dns_record.zip"
+  source {
+    content  = data.local_file.lambda_source.content
+    filename = "manage_dns_record.py"
+  }
 }
 
 data "aws_iam_policy" "lambda_basic" {
@@ -64,13 +71,13 @@ resource "aws_iam_role_policy_attachment" "attach_lambda_custom" {
 
 
 resource "aws_lambda_function" "dns_handler_lambda" {
-  filename      = "files/manage_dns_record.zip"
-  function_name = "${local.prefix}-dns-handler"
-  description   = "Create/Modify/Remove DNS record on autoscaling events"
-  role          = aws_iam_role.lambda_role.arn
+  filename         = "files/manage_dns_record.zip"
+  function_name    = "${local.prefix}-dns-handler"
+  description      = "Create/Modify/Remove DNS record on autoscaling events"
+  role             = aws_iam_role.lambda_role.arn
   source_code_hash = data.archive_file.lambda_function.output_base64sha256
-  handler = "manage_dns_record.lambda_handler"
-  runtime = "python3.8"
+  handler          = "manage_dns_record.lambda_handler"
+  runtime          = "python3.8"
 
   environment {
     variables = {

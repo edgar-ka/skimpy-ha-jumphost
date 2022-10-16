@@ -55,6 +55,6 @@ variable "instance_dns_name" {
 }
 
 variable "pub_key_path" {
-  type = string
+  type    = string
   default = "~/.ssh/id_rsa.pub"
 }
