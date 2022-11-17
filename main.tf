@@ -114,6 +114,8 @@ resource "aws_launch_template" "this_lt" {
   user_data = base64encode(templatefile("templates/userdata.sh", {
     instance_dns_name = var.instance_dns_name
     dns_zone          = var.dns_zone
+    project           = var.project_name
+    bkp_freq          = var.conf_bkp_freq
   }))
 
   tag_specifications {

@@ -66,3 +66,13 @@ variable "pub_key_path" {
   default     = "~/.ssh/id_rsa.pub"
   description = "Public key to provision to the instance"
 }
+
+variable "conf_bkp_freq" {
+  type        = string
+  description = "How often to backup ovpn config"
+  default     = "daily"
+  validation {
+    condition     = var.conf_bkp_freq == "hourly" || var.conf_bkp_freq == "dayly" || var.conf_bkp_freq == "weekly"
+    error_message = "Backup frequency must be hourly|dayly|weekly"
+  }
+}

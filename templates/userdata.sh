@@ -12,5 +12,26 @@ export ENDPOINT=${instance_dns_name}.${dns_zone}
 
 # Check if OVPN configuration is present in the backet
 # Download and unpack OVPN config if present
+RELAY_BUCKET=${project}-relay-bucket
+ARCHIVE_NAME=${project}-ovpn-config.tgz
+BACKUP_DIR=/etc/openvpn
 
-# Create cron job to save config to the backet hourly
+if [ $(aws s3 ls $RELAY_BUCKET | grep $ARCHIVE_NAME) ]; then 
+    aws s3 cp s3://$RELAY_BUCKET/$ARCHIVE_NAME /tmp/
+    rm -rf $BACKUP_DIR/*
+    tar -P --preserve-permissions --same-owner -zxf /tmp/$ARCHIVE_NAME
+    rm /tmp/$ARCHIVE_NAME
+fi
+
+# Small script to backup OVPN config
+cat > /etc/cron.${bkp_freq}/ovpn_config_backup << EOF
+#!/bin/sh
+#
+# Backup ovpn config dir hourly
+
+tar -P -czf /tmp/$ARCHIVE_NAME $BACKUP_DIR
+aws s3 mv /tmp/$ARCHIVE_NAME s3://$RELAY_BUCKET
+EOF
+
+# Make cron script executable
+chmod 0774 /etc/cron.${bkp_freq}/ovpn_config_backup
